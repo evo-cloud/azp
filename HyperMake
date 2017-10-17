@@ -1,0 +1,56 @@
+---
+format: hypermake.v0
+
+name: azp
+description: A simple HTTPS proxy with Authn/Authz
+
+targets:
+  toolchain:
+    description: build toolchain
+    build: scripts/docker/toolchain
+    watches:
+      - scripts/docker/toolchain
+
+  deps:
+    description: install dependencies
+    after:
+      - toolchain
+    watches:
+      - Gopkg.lock
+      - Gopkg.toml
+    cmds:
+      - dep ensure
+
+  build-darwin:
+    description: build for MacOS
+    after:
+      - deps
+    watches:
+      - '**/**/*.go'
+    cmds:
+      - scripts/build.sh darwin
+    artifacts:
+      - bin/darwin/amd64/azp
+
+  build-linux-[arch:amd64,arm64]:
+    description: build for Linux $[arch]
+    after:
+      - deps
+    watches:
+      - '**/**/*.go'
+    cmds:
+      - scripts/build.sh linux $[arch]
+    artifacts:
+      - bin/linux/$[arch]/azp
+
+  build:
+    description: build binaries
+    after:
+      - 'build-*'
+
+settings:
+  default-targets: [build]
+  exec-target: deps
+  docker:
+    image: 'azp/toolchain:go-1.9'
+    src-volume: /go/src/github.com/evo-cloud/azp
