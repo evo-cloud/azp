@@ -1,11 +1,11 @@
-#Authn/z Proxy
+# Authn/z Proxy
 
 A simple HTTP proxy does Authn/z with HTTPS termination.
 
 It supports
 
 - OpenID Connect based authentication
-- RBAC based URL path matching
+- RBAC based on URL path matching
 - HTTPS termination
 
 It's quick and handy to run in front of your application which doesn't supports
@@ -15,7 +15,7 @@ It doesn't do
 
 - Multiple backend servers
 
-##Quick Start
+## Quick Start
 
 ### Build
 
